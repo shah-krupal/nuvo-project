@@ -3,6 +3,7 @@ const router = express.Router()
 import User from '../models/user.js'
 import jwt from 'jsonwebtoken';
 
+
 router.post('/login', async (req, res) => {  // login
     const {email, password} = req.body;
     user = await User.findByPk(email);

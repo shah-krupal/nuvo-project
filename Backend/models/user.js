@@ -14,12 +14,16 @@ const User = sequelize.define('user', {
     },
     password:{
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
     },
     role:{
         type: DataTypes.STRING,
         allowNull: false,
     },
+    googleId:{
+        type: DataTypes.STRING,
+        allowNull: true,
+    }
 });
 
 User.beforeCreate(async (user) => {

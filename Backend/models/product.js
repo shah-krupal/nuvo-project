@@ -15,7 +15,7 @@ const Product = sequelize.define('product', {
     },
     shortDescription: {
         type: DataTypes.TEXT,
-        allowNull: true
+        allowNull: false
     },
     iconUrl: {
         type: DataTypes.STRING,
@@ -71,7 +71,11 @@ const Product = sequelize.define('product', {
         type: DataTypes.ARRAY(DataTypes.INTEGER), 
         allowNull: false
     },
-
+    counter:{
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        defaultValue: 0
+    },
 })
 await Product.sync({alter: true})
 

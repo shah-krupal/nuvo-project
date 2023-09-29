@@ -1,6 +1,21 @@
 import express from 'express'
 const router = express.Router()
 import Person from '../models/person.js'
+import sequelize from '../config/database.js';
+
+router.get('/allperson', async (req, res) => {
+        try{
+        const persons = await Person.findAndCountAll()
+        return res
+        .status(200)
+        .json(persons)
+    }
+    catch(err){
+        return res
+        .status(400)
+        .json({message: err.message})
+    }
+});
 
 router.get('/:id', async (req, res) => {
     try{
@@ -10,20 +25,37 @@ router.get('/:id', async (req, res) => {
         .json(person)
     }
     catch(err){
-        throw new Error('Error getting person');
+        return res
+        .status(400)
+        .json({message: err.message})
     }
 });
 
-router.post('/addperson', async (req, res) => {
+router.post('/createperson', async (req, res) => {
+    const transaction = await sequelize.transaction();
     try{
-        const person = await Person.create(req.body)
+        const person = await Person.findOne({where:{email:req.body.email},transaction})
+        if(person){
+            throw new Error('Person already exists');
+        }
+        const newPerson = await Person.create(req.body,{transaction})
+        await transaction.commit();
         return res
         .status(200)
-        .json(person)
+        .json(newPerson)
     }
-    catch(err){
-        throw new Error('Error adding person');
-    }   
+    catch (err) {
+        await transaction.rollback();
+        if (err.name === 'SequelizeUniqueConstraintError') {
+          return res
+          .status(409)
+          .json({ message: 'Email already exists' });
+        } else {
+          return res
+          .status(500)
+          .json({ message: err.message });
+        }
+      }
 });
 
 router.delete('/deleteperson/:id', async (req, res) => {
@@ -35,8 +67,13 @@ router.delete('/deleteperson/:id', async (req, res) => {
         .json(person)
     }
     catch(err){
-        throw new Error('Error deleting person');
+        return res
+        .status(400)
+        .json({message: err.message})
     }
 });
+
+
+
 
 export default router

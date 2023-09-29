@@ -4,13 +4,16 @@ import Category from '../models/category.js'
 
 router.post('/addcategory', async (req, res) => {  // add new category
     try{
+        console.log(req.body)
         const category = await Category.create(req.body)
         return res
         .status(200)
         .json(category)
     }
     catch(err){
-        throw new Error('Error adding category '+err.message);
+        return res
+        .status(400)
+        .json({message: err.message})
     }
 });
 
@@ -22,7 +25,9 @@ router.get('/getcategories', async (req, res) => {  // get all categories
         .json(categories)
     }
     catch(err){
-        throw new Error('Error getting categories '+err.message);
+        return res
+        .status(400)
+        .json({message: err.message})
     }
 });
 
@@ -38,10 +43,13 @@ router.get('/getpreferredcategory', async (req, res) => {  // get all preferred 
         .json(categories)
     }
     catch(err){
-        throw new Error('Error getting categories '+err.message);
+        return res
+        .status(400)
+        .json({message: err.message})
     }
 });
 
+// need to check on this!!!!
 router.patch('/updatecategory/:id', async (req, res) => {  // update category preferred status
     try{
         const isPreferred = req.body.preferred ;
@@ -54,6 +62,12 @@ router.patch('/updatecategory/:id', async (req, res) => {  // update category pr
         }) 
     }
     catch(err){
-        throw new Error('Error updating category '+err.message);
+        return res
+        .status(400)
+        .json({message: err.message})
     }
 });
+
+
+
+export default router
