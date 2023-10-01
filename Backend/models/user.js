@@ -1,5 +1,6 @@
 import {DataTypes} from 'sequelize'
 import sequelize from '../config/database.js'
+import bcrypt from 'bcrypt';
 
 const User = sequelize.define('user', {
     email:{
@@ -32,7 +33,7 @@ User.beforeCreate(async (user) => {
       const hashedPassword = await bcrypt.hash(user.password, saltRounds);
       user.password = hashedPassword;
     } catch (error) {
-      throw new Error('Error hashing the password');
+      throw new Error('Error hashing the password: ' + error.message);
     }
   });
 

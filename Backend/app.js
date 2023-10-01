@@ -9,10 +9,6 @@ import userRouter from "./routes/user.js";
 import categoryRouter from "./routes/category.js";
 import authRouter from "./routes/auth.js";
 
-
-
-
-
 dotenv.config();
 
 const app = express();
