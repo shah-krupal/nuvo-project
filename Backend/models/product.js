@@ -1,5 +1,6 @@
 import {DataTypes} from 'sequelize'
 import sequelize from '../config/database.js'
+import Category from './category.js';
 
 const Product = sequelize.define('product', {
     productId:{
@@ -51,15 +52,15 @@ const Product = sequelize.define('product', {
               }
       
             //   Check if all values in the category array exist in the Categories table
-            //   return Promise.all(
-            //     value.map((categoryName) => {
-            //       return Category.findOne({ where: { name: categoryName } }).then((category) => {
-            //         if (!category) {
-            //           throw new Error(`Invalid category: ${categoryName}`);
-            //         }
-            //       });
-            //     })
-            //   );
+              return Promise.all(
+                value.map((categoryName) => {
+                  return Category.findOne({ where: { categoryName: categoryName } }).then((category) => {
+                    if (!category) {
+                      throw new Error(`Invalid category: ${categoryName}`);
+                    }
+                  });
+                })
+              );
             }
         }
     },

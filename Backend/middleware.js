@@ -1,7 +1,10 @@
 import jwt from "jsonwebtoken";
 
-module.exports.isLoggedin = (req, res, next) => {
+export const isLoggedin = (req, res, next) => {
+	console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+	console.log(req.body)
 	const token = req.cookies.access_token;
+	console.log(token)
 	try {
 		if (!token) {
 			throw new Error("No token, authorization denied");
@@ -14,7 +17,7 @@ module.exports.isLoggedin = (req, res, next) => {
 	}
 };
 
-module.exports.isAdmin = (req, res, next) => {
+export const isAdmin = (req, res, next) => {
 	try {
 		if (req.role != "ADMIN" && req.role != "admin") {
 			throw new Error("Not an admin");

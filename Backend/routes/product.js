@@ -3,8 +3,9 @@ const router = express.Router()
 import Product from '../models/product.js'
 import sequelize from '../config/database.js';
 import {Op} from 'sequelize'
+import { isLoggedin } from '../middleware.js';
 
-router.post('/addproduct', async (req, res) => {  // add new product
+router.post('/addproduct', isLoggedin, async (req, res) => {  // add new product
     const transaction = await sequelize.transaction();
     try{
         const product = await Product.findOne({where:{name:req.body.name},transaction})

@@ -1,9 +1,9 @@
 import express from "express";
-import passport from "passport";
 import { Strategy as localStrategy } from "passport-local";
 import { Strategy as googleStrategy } from "passport-google-oauth20";
 import User from "../models/user.js";
 import jwt from 'jsonwebtoken';
+import passport from '../config/passport-auth.js'
 
 const router = express.Router();
 
@@ -93,57 +93,59 @@ router.post('/signupadmin/local', async (req, res) => {  // signup for admin
 // 		})
 // 	}) ;
 
+
 router.post("/login/local", (req, res, next) => {
-	passport.authenticate('local',(err,user)=>{
-		if(err){
-			return next(err) ;
-		}
-		if(!user){
-			return res
-        	.status(400)
-        	.json({message: err.message})
-		}
-		const token = generateJWTToken(user) ;
-		return res
+	console.log('local')
+	passport.authenticate('local', (err, user) => {
+	  if (err) {
+		return next(err);
+	  }
+	  if (!user) {
+		return res.status(400).json({ message: 'Invalid credentials' });
+	  }
+	  console.log('here')
+	  const token = generateJWTToken(user);
+	  console.log(token)
+	  return res
 		.status(200)
 		.cookie("access_token", token, {
-			httpOnly: true,
-			secure: process.env.NODE_ENV === "production",
+		  httpOnly: true,
+		  secure: process.env.NODE_ENV === "production",
 		})
 		.json({
-			status: true,
-			success: "SendData",
-			token: token,
-		})(res,req,next)
-	})
-});
+		  status: true,
+		  success: "SendData",
+		  token: token,
+		});
+	})(req, res, next); // <-- Wrap passport.authenticate with (req, res, next)
+  });
 
 router.get("/logout", (req, res) => {
 	req.logout();
 	res.send("Successfully logged out");
 });
 
-router.get("/login/google",passport.authenticate("google", { scope: ["profile", "email"] })
-);
+// router.get("/login/google",passport.authenticate("google", { scope: ["profile", "email"] })
+// );
 
-router.get(
-	"/login/google/callback",
-	passport.authenticate("googleStrategy", { failureRedirect: "/login-failed" }),
-	(req, res) => {
-		const token = generateJWTToken(req.user);
-		return res
-		.status(200)
-		.cookie("access_token", token, {
-			httpOnly: true,
-			secure: process.env.NODE_ENV === "production",
-		})
-		.json({
-			status: true,
-			success: "SendData",
-			token: token,
-		})
-	}
-);
+// router.get(
+// 	"/login/google/callback",
+// 	passport.authenticate("googleStrategy", { failureRedirect: "/login-failed" }),
+// 	(req, res) => {
+// 		const token = generateJWTToken(req.user);
+// 		return res
+// 		.status(200)
+// 		.cookie("access_token", token, {
+// 			httpOnly: true,
+// 			secure: process.env.NODE_ENV === "production",
+// 		})
+// 		.json({
+// 			status: true,
+// 			success: "SendData",
+// 			token: token,
+// 		})
+// 	}
+// );
 
 router.get("/login-failed", (req, res) => {
 	res.status(401).json({ message: "Login failed" });
@@ -154,20 +156,23 @@ const generateJWTToken = (user) => {
 		email: user.email,
 		role: process.env.USER, // google signup only for users Not Admin
 	};
+	console.log(tokenData)
 	const token = jwt.sign(tokenData, process.env.JWT_SECRET, {
 		expiresIn: process.env.JWT_EXPIRES_IN,
 	});
-	return res
-		.status(200)
-		.cookie("access_token", token, {
-			httpOnly: true,
-			secure: process.Env.NODE_ENV === "production",
-		})
-		.json({
-			status: true,
-			success: "SendData",
-			token: token,
-		});
+	console.log(token)
+	return token;
+	// return res
+	// 	.status(200)
+	// 	.cookie("access_token", token, {
+	// 		httpOnly: true,
+	// 		secure: process.Env.NODE_ENV === "production",
+	// 	})
+	// 	.json({
+	// 		status: true,
+	// 		success: "SendData",
+	// 		token: token,
+	// 	});
 };
 
 export default router;

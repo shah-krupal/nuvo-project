@@ -8,6 +8,7 @@ import personRouter from "./routes/person.js";
 import userRouter from "./routes/user.js";
 import categoryRouter from "./routes/category.js";
 import authRouter from "./routes/auth.js";
+import productRouter from "./routes/product.js"
 
 dotenv.config();
 
@@ -52,7 +53,7 @@ app.post("/login", (req, res) => {
 sequelize.authenticate().then(() => {
     console.log("Database connected...");
 }).catch((err) => {
-    console.log("Error: " + err);
+    console.log("Error:::: " + err);
     process.exit(1);
 }) ;
 
@@ -60,7 +61,22 @@ app.use("/auth", authRouter);
 app.use("/person", personRouter);
 app.use("/user", userRouter);
 app.use("/category", categoryRouter);
+app.use("/product", productRouter);
 
+function errorHandler(err, req, res, next) {
+    res.status(500);
+  
+    console.log(err)
+  
+    res.json({error: err.message});
+  }
+  
+  // 👉️ your other app.use() calls 👈️
+  
+  // 👇️ Must come LAST, after all other app.use() calls
+  app.use(errorHandler);
+  
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);
 });
+
