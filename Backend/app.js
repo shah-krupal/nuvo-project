@@ -9,6 +9,7 @@ import userRouter from "./routes/user.js";
 import categoryRouter from "./routes/category.js";
 import authRouter from "./routes/auth.js";
 import productRouter from "./routes/product.js"
+import paidpopularRouter from "./routes/paidpopular.js"
 
 dotenv.config();
 
@@ -62,6 +63,7 @@ app.use("/person", personRouter);
 app.use("/user", userRouter);
 app.use("/category", categoryRouter);
 app.use("/product", productRouter);
+app.use("/pop", paidpopularRouter);
 
 
 app.listen(port, () => {
