@@ -63,19 +63,7 @@ app.use("/user", userRouter);
 app.use("/category", categoryRouter);
 app.use("/product", productRouter);
 
-function errorHandler(err, req, res, next) {
-    res.status(500);
-  
-    console.log(err)
-  
-    res.json({error: err.message});
-  }
-  
-  // 👉️ your other app.use() calls 👈️
-  
-  // 👇️ Must come LAST, after all other app.use() calls
-  app.use(errorHandler);
-  
+
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);
 });

@@ -3,7 +3,7 @@ const router = express.Router()
 import Category from '../models/category.js'
 import {isLoggedin} from '../middleware.js'
 
-router.post('/addcategory',isLoggedin, async (req, res) => {  // add new category
+router.post('/addcategory', async (req, res) => {  // add new category
     try{
         console.log(req.body)
         const category = await Category.create(req.body)
