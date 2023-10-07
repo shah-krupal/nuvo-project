@@ -1,5 +1,6 @@
 import express from 'express';
 const router = express.Router();
+import { isAdmin } from '../middleware';
 
 const defaultBanner = "Welcome to AI Product Hunt!!" ;
 let banner = defaultBanner; 
@@ -17,7 +18,7 @@ router.get('/getbanner', async (req, res) => {  // get banner
     }
 });
 
-router.post('/setbanner', async (req, res) => {  // set banner
+router.post('/setbanner', isAdmin, async (req, res) => {  // set banner
     try{
         banner = req.body.banner;
         return res
@@ -31,7 +32,7 @@ router.post('/setbanner', async (req, res) => {  // set banner
     }
 });
 
-router.post('/resetbanner', async (req, res) => {  // reset banner
+router.post('/resetbanner', isAdmin, async (req, res) => {  // reset banner
     try{
         banner = defaultBanner;
         return res

@@ -120,10 +120,15 @@ router.post("/login/local", (req, res, next) => {
 	})(req, res, next); // <-- Wrap passport.authenticate with (req, res, next)
   });
 
-router.get("/logout", (req, res) => {
-	req.logout();
-	res.send("Successfully logged out");
-});
+router.post('/logout', (req, res) => {
+	req.logout((err) => {
+	  if (err) {
+		console.error('Error during logout:', err);
+		return res.status(500).json({ message: 'Logout error' });
+	  }
+	  res.status(200).json({ message: 'Logout successful' });
+	});
+  });
 
 // router.get("/login/google",passport.authenticate("google", { scope: ["profile", "email"] })
 // );

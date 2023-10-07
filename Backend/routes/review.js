@@ -2,6 +2,7 @@ import express from 'express'
 const router = express.Router()
 import Review from '../models/review.js'
 import sequelize from '../config/database.js';
+import { isLoggedin } from '../middleware.js';
 
 router.get('/getreviews/:productid/:pageno', async (req, res) => {  // get all reviews of a product id
     const pageSize = process.env.REVIEWPAGESIZE || 7 ;
@@ -35,7 +36,7 @@ router.get('/getreviews/:productid/:pageno', async (req, res) => {  // get all r
     }
 });
 
-router.post('/addreview', async (req, res) => {  // add new review
+router.post('/addreview', isLoggedin, async (req, res) => {  // add new review
     try{
         const review = await Review.create(req.body);
         return res

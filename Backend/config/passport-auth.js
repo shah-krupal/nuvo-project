@@ -2,7 +2,6 @@ import passport from "passport";
 import { Strategy as localStrategy } from "passport-local";
 import { Strategy as googleStrategy } from "passport-google-oauth20";
 import User from "../models/user.js";
-import session from "express-session";
 import bcrypt from 'bcrypt';
 
 passport.use(new localStrategy({usernameField: 'email'}, async (email, password, done) => { 

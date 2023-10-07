@@ -1,11 +1,10 @@
 import express from 'express'
 const router = express.Router()
 import Category from '../models/category.js'
-import {isLoggedin} from '../middleware.js'
+import { isAdmin } from '../middleware.js'
 
-router.post('/addcategory', async (req, res) => {  // add new category
+router.post('/addcategory',isAdmin, async (req, res) => {  // add new category
     try{
-        console.log(req.body)
         const category = await Category.create(req.body)
         return res
         .status(200)
@@ -51,7 +50,7 @@ router.get('/getpreferredcategory', async (req, res) => {  // get all preferred 
 });
 
 // need to check on this!!!!
-router.patch('/updatecategory/:id', async (req, res) => {  // update category preferred status
+router.patch('/updatecategory/:id', isAdmin,async (req, res) => {  // update category preferred status
     try{
         const isPreferred = req.body.preferred ;
         const category = await Category.findByPk(req.params.id)

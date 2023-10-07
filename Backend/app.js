@@ -33,16 +33,16 @@ app.use(express.urlencoded({extended:true}));
 app.use(express.json()) ;
 app.use(cookieParser());
 
-app.use(
-    session({
-      secret: process.env.JWT_SECRET, // Replace with your secret key
-      resave: false,
-      saveUninitialized: true,
-      // Additional session options
-    })
-  );
+// app.use(
+//     session({
+//       secret: process.env.JWT_SECRET, // Replace with your secret key
+//       resave: false,
+//       saveUninitialized: true,
+//       // Additional session options
+//     })
+//   );
 app.use(passport.initialize());
-app.use(passport.session());
+// app.use(passport.session());
 
 
 app.post("/login", (req, res) => {

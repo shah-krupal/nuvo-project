@@ -2,6 +2,7 @@ import express from 'express'
 const router = express.Router()
 import Person from '../models/person.js'
 import sequelize from '../config/database.js';
+import { isLoggedin } from '../middleware.js';
 
 router.get('/allperson', async (req, res) => {
         try{
@@ -31,7 +32,7 @@ router.get('/:id', async (req, res) => {
     }
 });
 
-router.post('/createperson', async (req, res) => {
+router.post('/createperson', isLoggedin, async (req, res) => {
     const transaction = await sequelize.transaction();
     try{
         const person = await Person.findOne({where:{email:req.body.email},transaction})
@@ -58,7 +59,7 @@ router.post('/createperson', async (req, res) => {
       }
 });
 
-router.delete('/deleteperson/:id', async (req, res) => {
+router.delete('/deleteperson/:id', isLoggedin, async (req, res) => {
     try{
         const person = await Person.findByPk(req.params.id)
         await person.destroy()

@@ -2,6 +2,7 @@ import express from 'express'
 const router = express.Router()
 import Paidpopular from '../models/paidpopular.js'
 import sequelize from '../config/database.js';
+import { isAdmin } from '../middleware.js';
 
 router.get('/allpaidpopular', async (req, res) => {
         try{
@@ -31,7 +32,7 @@ router.get('/:id', async (req, res) => {
     }
 });
 
-router.post('/createpaidpopular', async (req, res) => {
+router.post('/createpaidpopular', isAdmin, async (req, res) => {
     const transaction = await sequelize.transaction();
     try{
         const paidpopular = await Paidpopular.findOne({where:{displayName:req.body.displayName},transaction})
