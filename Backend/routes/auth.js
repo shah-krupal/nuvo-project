@@ -244,6 +244,105 @@ router.get('/google/callback',
 		}
 );
 
+router.post('/signup/local', async (req, res) => {  // signup for non-admin users
+	    const {email, username, password} = req.body;
+	    try{
+	        const user = await User.create({
+	            email: email,
+	            username: username,
+	            password: password,
+	            role: process.env.USER || "user"
+	        })
+			let tokenData = {
+				email: user.email,
+				role: user.role
+			}
+			console.log(tokenData)
+			const token = await jwt.sign(tokenData, process.env.JWT_SECRET, {expiresIn: process.env.JWT_EXPIRES_IN});
+		
+			return res
+				.status(200)
+				// .cookie("access_token", token, {
+				// 	httpOnly: true,
+				// 	secure: process.env.NODE_ENV === "production",
+				// })
+				.json({
+					status: true,
+					success: "SendData",
+					token: token
+				})
+	    }
+	    catch(err){
+	        return res
+			.status(400)
+			.json({message: err.message + err.stack})
+	    }
+	}) ;
+	
+	
+	router.post('/signupadmin/local', async (req, res) => {  // signup for admin
+	    const {email, username, password} = req.body;
+	    try{
+	        user = await User.create({
+	            email: email,
+	            username: username,
+	            password: password,
+	            role: process.env.ADMIN
+	        })
+	    }
+	    catch(err){
+	        throw new Error('Error creating user');
+	    }
+	
+	    let tokenData = {
+	        email: user.email,
+	        role: user.role
+	    }
+	
+	    const token = await jwt.sign(tokenData, process.env.JWT_SECRET, {expiresIn: process.env.JWT_EXPIRES_IN});
+	
+	    return res
+	    .status(200)
+	        .cookie("access_token", token, {
+	            httpOnly: true,
+	            secure: process.env.NODE_ENV === "production",
+	        })
+	        .json({
+	            status: true,
+	            success: "SendData",
+	            token: token
+	        })
+	}) ;
+
+
+router.post("/login/local", (req, res, next) => {
+	console.log('local')
+	passport.authenticate('local', (err, user) => {
+	  if (err) {
+		return next(err);
+	  }
+	  if (!user) {
+		return res.status(400).json({ message: 'Invalid credentials' });
+	  }
+	  console.log('here')
+	  const token = generateJWTToken(user);
+	  console.log(token)
+	  return res
+		.status(200)
+		.cookie("access_token", token, {
+		  httpOnly: true,
+		  secure: process.env.NODE_ENV === "production",
+		})
+		.json({
+		  status: true,
+		  success: "SendData",
+		  token: token,
+		});
+	})(req, res, next); // <-- Wrap passport.authenticate with (req, res, next)
+  });
+
+	
+
 const generateJWTToken = (user) => {
 		let tokenData = {
 			email: user.email,
