@@ -4,9 +4,9 @@ import Review from '../models/review.js'
 import sequelize from '../config/database.js';
 import { isLoggedin } from '../middleware.js';
 
-router.get('/getreviews/:productid/:pageno', async (req, res) => {  // get all reviews of a product id
+router.get('/getreviews/:productid/:pageno?', async (req, res) => {  // get all reviews of a product id
     const pageSize = process.env.REVIEWPAGESIZE || 7 ;
-    const productId = req.params.productId;
+    const productId = req.params.productid;
     const currentPage = req.params.pageno || 1; // Default to page 1
     try{
         const reviews = await Review.findAll({
@@ -20,14 +20,20 @@ router.get('/getreviews/:productid/:pageno', async (req, res) => {  // get all r
             })
 
         const numberofpages = Math.ceil(numberofreviews/pageSize) ;
-        const hasnextpage = (req.params.pageno < numberofpages) ;
+        const hasnextpage = (currentPage < numberofpages) ;
+
+        if(currentPage > numberofpages){
+            throw new Error('Page number exceeds total number of pages');
+        }
 
         return res
         .status(200)
-        .json(currentPage,
-            numberofpages,
-            hasnextpage,
-            reviews)
+        .json({
+            "currentPage":currentPage,
+            "numberofpages":numberofpages,
+            "hasnextpage":hasnextpage,
+            "reviews":reviews
+        })
     }
     catch(err){
         return res

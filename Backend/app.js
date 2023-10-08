@@ -10,6 +10,8 @@ import categoryRouter from "./routes/category.js";
 import authRouter from "./routes/auth.js";
 import productRouter from "./routes/product.js"
 import paidpopularRouter from "./routes/paidpopular.js"
+import staticdataRouter from "./routes/staticdata.js"
+import reviewRouter from "./routes/review.js"
 
 dotenv.config();
 
@@ -64,6 +66,9 @@ app.use("/user", userRouter);
 app.use("/category", categoryRouter);
 app.use("/product", productRouter);
 app.use("/pop", paidpopularRouter);
+app.use("/staticdata", staticdataRouter);
+app.use("/review", reviewRouter);
+
 
 app.get("/", (req, res) => {
     res.send("Hello World");

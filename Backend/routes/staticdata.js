@@ -1,6 +1,6 @@
 import express from 'express';
 const router = express.Router();
-import { isAdmin } from '../middleware';
+import { isAdmin } from '../middleware.js';
 
 const defaultBanner = "Welcome to AI Product Hunt!!" ;
 let banner = defaultBanner; 
