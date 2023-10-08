@@ -19,31 +19,38 @@ passport.use(new localStrategy({usernameField: 'email'}, async (email, password,
 
 
 
-// passport.use(new googleStrategy({
-//     clientID: process.env.GOOGLE_CLIENT_ID,
-//     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-//     callbackURL: "http://localhost:3000/login/google/callback"
-//   }, async (accessToken, refreshToken, profile, done) => {
-//     try {
-//       // Check if a user with the Google ID exists in your database
-//       let user = await User.findOne({ googleId: profile.id });
+passport.use(new googleStrategy({
+    clientID: '752847050713-jkg2478vae1245abgmc34m963s2uvg6l.apps.googleusercontent.com',  //process.env.GOOGLE_CLIENT_ID,
+    clientSecret: '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',   //process.env.GOOGLE_CLIENT_SECRET,
+    callbackURL: "http://localhost:3000/auth/google/callback",
+    scope: ['profile', 'email'],
+  }, async function (accessToken, refreshToken, profile, done) {
+    console.log('trying google')
+    console.log('profile' + profile)
+    console.log('222')
+    try {
+      // Check if a user with the Google ID exists in your database
+      let user = await User.findOne({ where:{googleId: profile.id }});
   
-//       if (!user) {
-//         // Create a new user with Google ID
-//         user = new User({
-//             email: profile.emails[0].value,
-//             username: profile.name.givenName,
-//             role: 'user',
-//             googleId: profile.id
-//         });
-//         await user.save();
-//       }
-  
-//       return done(null, user);
-//     } catch (err) {
-//       return done(err);
-//     }
-//   }));
+      if (!user) {
+        // Create a new user with Google ID
+        user = new User({
+            email: profile.emails[0].value,
+            username: profile.name?.givenName,
+            role: 'user',
+            googleId: profile.id
+        });
+        const newuser = await user.save();
+        console.log('newuser!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!' + newuser)
+      }
+      console.log(user)
+      return done(null, user);
+    } catch (err) {
+      console.log(err)
+      return done(err);
+    }
+  }));
+ 
 
   // serialize the user for the session
 passport.serializeUser((user, done) => {
@@ -92,5 +99,8 @@ passport.deserializeUser((email, done) => {
 //     }
 //   )
 // );
+
+
+  
 
 export default passport;

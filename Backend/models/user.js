@@ -28,12 +28,15 @@ const User = sequelize.define('user', {
 });
 
 User.beforeCreate(async (user) => {
-    try {
-      const saltRounds = 10; 
-      const hashedPassword = await bcrypt.hash(user.password, saltRounds);
-      user.password = hashedPassword;
-    } catch (error) {
-      throw new Error('Error hashing the password: ' + error.message);
+    if(user.password)
+    {
+        try {
+            const saltRounds = 10; 
+            const hashedPassword = await bcrypt.hash(user.password, saltRounds);
+            user.password = hashedPassword;
+          } catch (error) {
+            throw new Error('Error hashing the password: ' + error.message);
+          }
     }
   });
 
