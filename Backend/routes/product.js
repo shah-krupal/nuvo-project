@@ -6,30 +6,41 @@ import {Op} from 'sequelize'
 import { isLoggedin } from '../middleware.js';
 
 router.post('/addproduct', isLoggedin, async (req, res) => {  // add new product
-    const transaction = await sequelize.transaction();
     try{
-        const product = await Product.findOne({where:{name:req.body.name},transaction})
-        if(product){
-            throw new Error('Product already exists');
-        }
-        const newProduct = await Product.create(req.body,{transaction})
-        await transaction.commit(); 
+        const product = await Product.create(req.body) ;
         return res
         .status(200)
-        .json(newProduct)
+        .json(product)
+    }catch(err){
+        return res
+        .status(400)
+        .json({message: err.message})
     }
-    catch (err) {
-        await transaction.rollback();
-        if (err.name === 'SequelizeUniqueConstraintError') {
-          return res
-          .status(409)
-          .json({ message: 'Product already exists' });
-        } else {
-          return res
-          .status(500)
-          .json({ message: err.message });
-        }
-      }
+
+    // const transaction = await sequelize.transaction();
+    // try{
+    //     const product = await Product.findOne({where:{name:req.body.name},transaction})
+    //     if(product){
+    //         throw new Error('Product already exists');
+    //     }
+    //     const newProduct = await Product.create(req.body,{transaction})
+    //     await transaction.commit(); 
+    //     return res
+    //     .status(200)
+    //     .json(newProduct)
+    // }
+    // catch (err) {
+    //     await transaction.rollback();
+    //     if (err.name === 'SequelizeUniqueConstraintError') {
+    //       return res
+    //       .status(409)
+    //       .json({ message: 'Product already exists' });
+    //     } else {
+    //       return res
+    //       .status(500)
+    //       .json({ message: err.message });
+    //     }
+    //   }
 });
 
 router.get('/getproducts', async (req, res) => {  // get all products
@@ -138,7 +149,7 @@ router.get('/productsbycategoryid/:categoryid/:pageno', async (req, res) => {  /
 
         return res
         .status(200)
-        .json(currentPage,
+        .json(currentPage,  
             numberofpages,
             hasnextpage,
             products)

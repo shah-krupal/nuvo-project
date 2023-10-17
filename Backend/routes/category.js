@@ -50,16 +50,28 @@ router.get('/getpreferredcategory', async (req, res) => {  // get all preferred 
 });
 
 // need to check on this!!!!
-router.patch('/updatecategory/:id', isAdmin,async (req, res) => {  // update category preferred status
+// { Structure of input object
+//     "categoryId": 1,
+//     "isPreferred": TRUE
+// }
+router.patch('/updatepreferredcategory', isAdmin,async (req, res) => {  // update category preferred status
     try{
+        const id = req.body.categoryId;
         const isPreferred = req.body.preferred ;
-        const category = await Category.findByPk(req.params.id)
-        await category.update(req.body)
-        await Category.update({preferred: isPreferred}, {
+        const result = await Category.update({preferred: isPreferred}, {
             where: {
-                categoryId:req.params.id
+                categoryId:id
             }
         }) 
+        if(result[0] == 0)
+        {
+            return res
+            .status(400)
+            .json({message: "Category not found"})
+        }
+        return res
+        .status(200)
+        .json({message: "Category updated"})
     }
     catch(err){
         return res
@@ -68,6 +80,45 @@ router.patch('/updatecategory/:id', isAdmin,async (req, res) => {  // update cat
     }
 });
 
+
+// put in any number of fields you want to update in category
+router.patch("/updatecategory", isAdmin, async (req, res) => {  // update category
+    try{
+        const id = req.body.categoryId;
+        const oldObject = await Category.findOne({
+            where: {
+                categoryId:id
+            }
+        })
+        if(!oldObject)
+        {
+            return res
+            .status(400)
+            .json({message: "Category not found"})
+        }
+        const mergedObject = {...oldObject, ...req.body}
+        mergedObject.categoryId = id;       // For safety reasons to not change id by mistake
+        const result = await Category.update(mergedObject, {
+            where: {
+                categoryId:id
+            }
+        })
+        if(result[0] == 0)
+        {
+            return res
+            .status(400)
+            .json({message: "Category not found"})
+        }
+        return res
+        .status(200)
+        .json({message: "Category updated"})
+    }
+    catch(err){
+        return res
+        .status(400)
+        .json({message: err.message})
+    }
+});
 
 
 export default router
