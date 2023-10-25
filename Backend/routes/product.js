@@ -117,8 +117,10 @@ router.get('/searchproduct', async (req, res) => {  // search products by name S
 
 router.get('/getproduct/:id', async (req, res) => {  // get product by id
     try{
-        await Product.increment('counter', { where: { id: req.params.id } })
+        await Product.increment('counter', { where: { productId: req.params.id } })
         const product = await Product.findByPk(req.params.id)
+        const person = await fetchPersons(product.teamMembers)
+        product.teamMembers = person
         return res
         .status(200)
         .json(product)
@@ -206,7 +208,6 @@ const fetchPersons = async (personIds) => {
           personId: personIds, // Use personIds array to filter by IDs
         },
       });
-  
       return persons;
     } catch (error) {
       console.error('Error fetching persons:', error);
