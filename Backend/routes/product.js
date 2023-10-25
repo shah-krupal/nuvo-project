@@ -2,8 +2,9 @@ import express from 'express'
 const router = express.Router()
 import Product from '../models/product.js'
 import sequelize from '../config/database.js';
-import {Op} from 'sequelize'
+import {Op, Sequelize} from 'sequelize'
 import { isLoggedin } from '../middleware.js';
+import Person from '../models/person.js'
 
 router.post('/addproduct', isLoggedin, async (req, res) => {  // add new product
     try{
@@ -61,21 +62,21 @@ router.get('/getproducts/:pageno', async (req, res) => {  // paginated products
     const pageSize = process.env.PRODUCTPAGESIZE || 20 ;
     const currentPage = req.params.pageno || 1; // Default to page 1
     try{
-        const products = await Product.findAll({
+        const products = await Product.findAndCountAll({
                 offset: (currentPage-1)*pageSize,
                 limit: pageSize
             })
-        const numberofproducts = await Product.count() ;
+        const numberofproducts = products.count ;
 
         const numberofpages = Math.ceil(numberofproducts/pageSize) ;
         const hasnextpage = (req.params.pageno < numberofpages) ;
 
         return res
         .status(200)
-        .json(currentPage,
+        .json({currentPage,
             numberofpages,
             hasnextpage,
-            products)
+            products})
     }
     catch(err){
         return res
@@ -96,7 +97,7 @@ router.get('/searchproduct', async (req, res) => {  // search products by name S
                         },
                     },
                     {
-                        description: {
+                        shortDescription: {
                             [Op.like]: `%${query}%`
                         }
                     }
@@ -129,7 +130,7 @@ router.get('/getproduct/:id', async (req, res) => {  // get product by id
     }
 });
 
-router.get('/productsbycategoryid/:categoryid/:pageno', async (req, res) => {  // get products by categoryid
+router.get('/productsbycategoryid/:categoryid/:pageno', async (req, res) => {  // get products by categoryid default sort by popularity
     const pageSize = process.env.PRODUCTPAGESIZE || 20 ;
     const categoryId = req.params.categoryid;
     const currentPage = req.params.pageno || 1; // Default to page 1
@@ -161,30 +162,35 @@ router.get('/productsbycategoryid/:categoryid/:pageno', async (req, res) => {  /
     }
 });
 
-router.get('/productsbycategoryname/:categoryname/:pageno', async (req, res) => {  // get products by category name
+router.get('/productsbycategoryname/:categoryname/:pageno', async (req, res) => {  // get products by category name default sort by popularity
+    const {query} = req.query;
+    let sortBy = 'counter' // default
+    if(query == 'newest'){
+        sortBy = 'createdAt'
+    }
     const pageSize = process.env.PRODUCTPAGESIZE || 20 ;
     const categoryname = req.params.categoryname;
     const currentPage = req.params.pageno || 1; // Default to page 1
     try{
-        const products = await Product.findAll({
-                where: {categoryName: categoryname},
-                order: [['counter', 'DESC']],
+        const products = await Product.findAndCountAll({
+                where: {category: {
+                    [Sequelize.Op.contains]:[categoryname]
+                }},
+                order: [[sortBy, 'DESC']],
                 offset: (currentPage-1)*pageSize,
                 limit: pageSize
             })
-        const numberofproducts = await Product.count({
-                where: {categoryName: categoryname}
-            })
-
+        const numberofproducts = products.count
         const numberofpages = Math.ceil(numberofproducts/pageSize) ;
+        console.log(numberofpages)
         const hasnextpage = (req.params.pageno < numberofpages) ;
-
+        console.log(hasnextpage)
         return res
         .status(200)
-        .json(currentPage,
+        .json({currentPage,
             numberofpages,  
             hasnextpage,
-            products)
+            products})
     }
     catch(err){
         return res
@@ -193,15 +199,30 @@ router.get('/productsbycategoryname/:categoryname/:pageno', async (req, res) => 
     }
 });
 
+const fetchPersons = async (personIds) => {
+    try {
+      const persons = await Person.findAll({
+        where: {
+          personId: personIds, // Use personIds array to filter by IDs
+        },
+      });
+  
+      return persons;
+    } catch (error) {
+      console.error('Error fetching persons:', error);
+      throw error;
+    }
+  };
 
 // Under scrutiny !!!!
 router.get('/:productid/team', async (req, res) => {  // get team members of a product
     try{
         const product = await Product.findByPk(req.params.productid)
-        const teamMembers = await product.getTeamMembers()
+        const teamMembers = await product.teamMembers ;
+        const team = await fetchPersons(teamMembers) ;
         return res
         .status(200)
-        .json(teamMembers)
+        .json(team)
     }
     catch(err){
         return res
@@ -214,7 +235,7 @@ router.get('/:productid/team', async (req, res) => {  // get team members of a p
 router.get('/:productid/overview', async (req, res) => {  // get overview of a product
     try{
         const product = await Product.findByPk(req.params.productid)
-        const overview = await product.getOverview()
+        const overview = await product.overviews
         return res
         .status(200)
         .json(overview)

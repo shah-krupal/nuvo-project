@@ -2,6 +2,12 @@ import {DataTypes} from 'sequelize'
 import sequelize from '../config/database.js'
 
 const Person = sequelize.define('person', {
+    personId:{
+        type:DataTypes.INTEGER,
+        autoIncrement:true,
+        allowNull: false,
+        primaryKey:true
+    },
     firstName: {
         type: DataTypes.STRING,
         allowNull: false
@@ -13,7 +19,6 @@ const Person = sequelize.define('person', {
     email:{
         type: DataTypes.STRING,
         allowNull: false,
-        primaryKey:true,
         unique: true
     },
     role:{

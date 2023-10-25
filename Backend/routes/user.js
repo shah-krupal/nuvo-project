@@ -6,7 +6,7 @@ import jwt from 'jsonwebtoken';
 
 router.post('/login', async (req, res) => {  // login
     const {email, password} = req.body;
-    user = await User.findByPk(email);
+    const user = await User.findByPk(email);
 
     if(!user){
         throw new Error('User not found');
