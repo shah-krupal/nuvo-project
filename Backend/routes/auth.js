@@ -246,7 +246,7 @@ router.get('/google/callback',
 						httpOnly: true,
 						secure: process.env.NODE_ENV === "production",
 					})
-					res.redirect('http://localhost:3000/success')
+					res.redirect('https://producthunt-frontend.vercel.app/success')
 			
 		}
 );
@@ -267,17 +267,22 @@ router.post('/signup/local', async (req, res) => {  // signup for non-admin user
 			console.log(tokenData)
 			const token = await jwt.sign(tokenData, process.env.JWT_SECRET, {expiresIn: process.env.JWT_EXPIRES_IN});
 		
-			return res
-				.status(200)
-				// .cookie("access_token", token, {
-				// 	httpOnly: true,
-				// 	secure: process.env.NODE_ENV === "production",
-				// })
-				.json({
-					status: true,
-					success: "SendData",
-					token: token
-				})
+			// return res
+			// 	.status(200)
+			// 	// .cookie("access_token", token, {
+			// 	// 	httpOnly: true,
+			// 	// 	secure: process.env.NODE_ENV === "production",
+			// 	// })
+			// 	.json({
+			// 		status: true,
+			// 		success: "SendData",
+			// 		token: token
+			// 	}).
+			res.cookie("access_token", token, {
+				httpOnly: true,
+				secure: process.env.NODE_ENV === "production",
+			})
+			res.redirect('https://producthunt-frontend.vercel.app/success')
 	    }
 	    catch(err){
 	        return res
