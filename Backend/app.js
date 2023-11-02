@@ -70,9 +70,9 @@ app.use("/staticdata", staticdataRouter);
 app.use("/review", reviewRouter);
 
 
-app.get("/", (req, res) => {
-    res.send("Hello World");
-});
+// app.get("/", (req, res) => {
+//     res.send("Hello World");
+// });
 
 
 app.listen(port, () => {
