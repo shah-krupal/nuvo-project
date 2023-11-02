@@ -21,6 +21,10 @@ const Person = sequelize.define('person', {
         allowNull: false,
         unique: true
     },
+    profileUrl:{
+        type: DataTypes.STRING,
+        allowNull: true
+    },
     role:{
         type: DataTypes.STRING,
         allowNull: true
