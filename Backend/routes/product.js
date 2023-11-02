@@ -93,12 +93,12 @@ router.get('/searchproduct', async (req, res) => {  // search products by name S
                 [Op.or]: [
                     {
                         name: {
-                            [Op.like]: `%${query}%`
+                            [Op.ilike]: `%${query}%`
                         },
                     },
                     {
                         shortDescription: {
-                            [Op.like]: `%${query}%`
+                            [Op.ilike]: `%${query}%`
                         }
                     }
                 ]

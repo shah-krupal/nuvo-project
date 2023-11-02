@@ -230,17 +230,23 @@ router.get('/google/callback',
 		function(req,res){
 			const token = generateJWTToken(req.user);
 			console.log(token)
-			return res
-				.status(200)
-				.cookie("access_token", token, {
-					httpOnly: true,
-					secure: process.env.NODE_ENV === "production",
-				})
-				.json({
-					status: true,
-					success: "SendData",
-					token: token,
-				});
+		
+			// return res
+			// 	.status(200)
+			// 	.cookie("access_token", token, {
+			// 		httpOnly: true,
+			// 		secure: process.env.NODE_ENV === "production",
+			// 	})
+			// 	.json({
+			// 		status: true,
+			// 		success: "SendData",
+			// 		token: token,
+			// 	});
+			res.cookie("access_token", token, {
+						httpOnly: true,
+						secure: process.env.NODE_ENV === "production",
+					})
+			res.redirect('/')
 		}
 );
 

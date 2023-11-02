@@ -26,9 +26,6 @@ passport.use(new googleStrategy({
     callbackURL:"https://nuvo-66v8.onrender.com/auth/google/callback",
     scope: ['profile', 'email'],
   }, async function (accessToken, refreshToken, profile, done) {
-    console.log('trying google')
-    console.log('profile' + profile)
-    console.log('222')
     try {
       // Check if a user with the Google ID exists in your database
       let user = await User.findOne({ where:{googleId: profile.id }});
