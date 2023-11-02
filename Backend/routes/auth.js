@@ -246,7 +246,7 @@ router.get('/google/callback',
 						httpOnly: true,
 						secure: process.env.NODE_ENV === "production",
 					})
-			res.redirect('/')
+			
 		}
 );
 
