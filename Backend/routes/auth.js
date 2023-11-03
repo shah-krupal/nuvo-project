@@ -246,7 +246,8 @@ router.get('/google/callback',
 						httpOnly: true,
 						secure: process.env.NODE_ENV === "production",
 					})
-					res.redirect('https://producthunt-frontend.vercel.app/success')
+					// res.redirect('https://producthunt-frontend.vercel.app/success')
+					res.redirectI('http://localhost:3000/success')
 			
 		}
 );
@@ -282,7 +283,8 @@ router.post('/signup/local', async (req, res) => {  // signup for non-admin user
 				httpOnly: true,
 				secure: process.env.NODE_ENV === "production",
 			})
-			res.redirect('https://producthunt-frontend.vercel.app/success')
+			// res.redirect('https://producthunt-frontend.vercel.app/success')
+			res.redirectI('http://localhost:3000/success')
 	    }
 	    catch(err){
 	        return res
@@ -354,7 +356,8 @@ router.post("/login/local", (req, res, next) => {
 		httpOnly: true,
 		secure: process.env.NODE_ENV === "production",
 	})
-	res.redirect('https://producthunt-frontend.vercel.app/success')
+	// res.redirect('https://producthunt-frontend.vercel.app/success')
+	res.redirectI('http://localhost:3000/success')
 	})(req, res, next); // <-- Wrap passport.authenticate with (req, res, next)
   });
 
