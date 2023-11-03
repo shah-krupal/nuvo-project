@@ -339,17 +339,22 @@ router.post("/login/local", (req, res, next) => {
 	  console.log('here')
 	  const token = generateJWTToken(user);
 	  console.log(token)
-	  return res
-		.status(200)
-		.cookie("access_token", token, {
-		  httpOnly: true,
-		  secure: process.env.NODE_ENV === "production",
-		})
-		.json({
-		  status: true,
-		  success: "SendData",
-		  token: token,
-		});
+	//   return res
+	// 	.status(200)
+	// 	.cookie("access_token", token, {
+	// 	  httpOnly: true,
+	// 	  secure: process.env.NODE_ENV === "production",
+	// 	})
+	// 	.json({
+	// 	  status: true,
+	// 	  success: "SendData",
+	// 	  token: token,
+	// 	});
+	res.cookie("access_token", token, {
+		httpOnly: true,
+		secure: process.env.NODE_ENV === "production",
+	})
+	res.redirect('https://producthunt-frontend.vercel.app/success')
 	})(req, res, next); // <-- Wrap passport.authenticate with (req, res, next)
   });
 
