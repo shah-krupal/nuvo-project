@@ -21,8 +21,18 @@ const dbConfig = config[env];
 //   logging:console.log,
 // });
 
+// const sequelize = new Sequelize('postgres://default:gQA5wxdkf6mz@ep-noisy-brook-58368266.ap-southeast-1.postgres.vercel-storage.com:5432/verceldb',{
+//   dialect: 'postgres',
+//   logging:console.log,
+// })
+
 const sequelize = new Sequelize('postgres://default:gQA5wxdkf6mz@ep-noisy-brook-58368266.ap-southeast-1.postgres.vercel-storage.com:5432/verceldb',{
   dialect: 'postgres',
+  dialectOptions: {
+    ssl: {
+      require: true,
+    },
+  },
   logging:console.log,
 })
 
