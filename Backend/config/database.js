@@ -24,6 +24,7 @@ const dbConfig = config[env];
 
 const sequelize = new Sequelize('postgres://default:gQA5wxdkf6mz@ep-noisy-brook-58368266.ap-southeast-1.postgres.vercel-storage.com:5432/verceldb',{
   dialect: 'postgres',
+  dialectModule: require('pg'),
   dialectOptions: {
     ssl: {
       require: true,
