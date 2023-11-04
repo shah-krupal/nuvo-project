@@ -1,5 +1,6 @@
 import {Sequelize} from 'sequelize' ;
 import config from './config.js' ;
+import pg from 'pg' ;
 
 const env = process.env.NODE_ENV || 'development';
 const dbConfig = config[env];
@@ -24,7 +25,7 @@ const dbConfig = config[env];
 
 const sequelize = new Sequelize('postgres://default:gQA5wxdkf6mz@ep-noisy-brook-58368266.ap-southeast-1.postgres.vercel-storage.com:5432/verceldb',{
   dialect: 'postgres',
-  dialectModule: require('pg'),
+  dialectModule: pg,
   dialectOptions: {
     ssl: {
       require: true,
