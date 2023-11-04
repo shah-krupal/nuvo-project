@@ -26,6 +26,6 @@ const Review = sequelize.define('review', {
     }
 });
 
-await Review.sync({ alter: true });
+await Review.sync();
 
 export default Review;

@@ -15,6 +15,6 @@ const Tag = sequelize.define('tag', {
     }
 });
 
-await Tag.sync({ alter: true });
+await Tag.sync();
 
 export default Tag;

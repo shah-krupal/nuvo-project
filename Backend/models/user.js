@@ -40,6 +40,6 @@ User.beforeCreate(async (user) => {
     }
   });
 
-await User.sync({ alter: true });
+await User.sync();
 
 export default User;

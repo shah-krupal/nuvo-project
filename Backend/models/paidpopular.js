@@ -20,6 +20,6 @@ const Paidpopular = sequelize.define('paidpopular', {
 });
 
 
-await Paidpopular.sync({ alter: true });
+await Paidpopular.sync();
 
 export default Paidpopular;

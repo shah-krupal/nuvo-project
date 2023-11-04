@@ -24,6 +24,7 @@ const Category = sequelize.define("category", {
 	},
 });
 
-await Category.sync({ alter: true });
+// await Category.sync({ alter: true });
+await Category.sync();
 
 export default Category;
