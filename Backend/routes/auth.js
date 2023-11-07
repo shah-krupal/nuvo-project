@@ -253,11 +253,10 @@ router.get('/google/callback',
 );
 
 router.post('/signup/local', async (req, res) => {  // signup for non-admin users
-	    const {email, username, password} = req.body;
+	    const {email, password} = req.body;
 	    try{
 	        const user = await User.create({
 	            email: email,
-	            username: username,
 	            password: password,
 	            role: process.env.USER || "user"
 	        })
@@ -284,7 +283,7 @@ router.post('/signup/local', async (req, res) => {  // signup for non-admin user
 				secure: process.env.NODE_ENV === "production",
 			})
 			// res.redirect('https://producthunt-frontend.vercel.app/success')
-			res.redirectI('http://localhost:3000/success')
+			res.redirect('http://localhost:3000/success')
 	    }
 	    catch(err){
 	        return res
@@ -295,11 +294,10 @@ router.post('/signup/local', async (req, res) => {  // signup for non-admin user
 	
 	
 	router.post('/signupadmin/local', async (req, res) => {  // signup for admin
-	    const {email, username, password} = req.body;
+	    const {email, password} = req.body;
 	    try{
 	        user = await User.create({
 	            email: email,
-	            username: username,
 	            password: password,
 	            role: process.env.ADMIN
 	        })
@@ -357,7 +355,7 @@ router.post("/login/local", (req, res, next) => {
 		secure: process.env.NODE_ENV === "production",
 	})
 	// res.redirect('https://producthunt-frontend.vercel.app/success')
-	res.redirectI('http://localhost:3000/success')
+	res.redirect('http://localhost:3000/success')
 	})(req, res, next); // <-- Wrap passport.authenticate with (req, res, next)
   });
 
