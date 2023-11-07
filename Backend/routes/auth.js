@@ -247,7 +247,7 @@ router.get('/google/callback',
 						secure: process.env.NODE_ENV === "production",
 					})
 					// res.redirect('https://producthunt-frontend.vercel.app/success')
-					res.redirectI('http://localhost:3000/success')
+					res.redirect('http://localhost:3000/success')
 			
 		}
 );

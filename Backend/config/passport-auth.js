@@ -34,7 +34,6 @@ passport.use(new googleStrategy({
         // Create a new user with Google ID
         user = new User({
             email: profile.emails[0].value,
-            username: profile.name?.givenName,
             role: 'user',
             googleId: profile.id
         });
