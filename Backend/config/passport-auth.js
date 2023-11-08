@@ -37,6 +37,7 @@ passport.use(new googleStrategy({
             role: 'user',
             googleId: profile.id
         });
+        console.log(user)
         const newuser = await user.save();
         console.log('newuser!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!' + newuser)
       }

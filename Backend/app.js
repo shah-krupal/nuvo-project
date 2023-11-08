@@ -75,6 +75,10 @@ app.get("/", (req, res) => {
 });
 
 
+app.get("/success",(req,res)=>{
+    res.send("success")
+})
+
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);
 });
