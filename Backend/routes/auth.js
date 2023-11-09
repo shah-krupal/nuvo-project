@@ -215,7 +215,8 @@ router.get('/login/failed', (req, res) => {
 
 // router.get('/google/callback', 
 // 	passport.authenticate('google', { 
-// 		successRedirect:'/login/successful',
+// 		session: false,
+// 		successRedirect:'/auth/login/successful',
 // 		failureRedirect: '/login/failed' }),
 // 		function(req,res){
 // 			console.log('here')
@@ -267,10 +268,10 @@ router.post('/signup/local', async (req, res) => {  // signup for non-admin user
 		
 			return res
 				.status(200)
-				// .cookie("access_token", token, {
-				// 	httpOnly: true,
-				// 	secure: process.env.NODE_ENV === "production",
-				// })
+				.cookie("access_token", token, {
+					httpOnly: true,
+					secure: process.env.NODE_ENV === "production",
+				})
 				.json({
 					status: true,
 					success: "SendData",
