@@ -250,9 +250,9 @@ router.get('/google/callback',
 			res.cookie("access_token", tmp, { domain: '.vercel.app', path: '/', sameSite: 'None', httpOnly: false });
 			res.setHeader('access_token', token);
 			// Cookies.set('access_token', token, { domain: '.vercel.app', path: '/', sameSite: 'None', httpOnly: false })
-			res.redirect('http://localhost:3000/success')
+			// res.redirect('http://localhost:3000/success')
 			
-			// res.redirect('https://producthunt-frontend.vercel.app/success');
+			res.redirect('https://producthunt-frontend.vercel.app/success');
 
 			
 			
