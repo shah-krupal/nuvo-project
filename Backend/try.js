@@ -1,14 +1,17 @@
 import axios from 'axios';
 
-async function testfunc() {
+function testfunc() {
     try {
-      const response = await axios.get('http://localhost:3000/auth/google/callback', {
+      console.log('hi fore ')
+      axios.get('http://localhost:3000/auth/google', {
         headers: {
           'Content-Type': 'application/json',
         },
+      }).then((response) => {
+        console.log(response);
       });
-      const data = response.data;
-      console.log(data);
+      
+      console.log('hi after func');
     } catch (err) {
       console.error(err);
     }

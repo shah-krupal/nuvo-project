@@ -39,7 +39,7 @@ passport.use(new googleStrategy({
         });
         console.log(user)
         const newuser = await user.save();
-        console.log('newuser!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!' + newuser)
+        console.log('newuser' + newuser)
       }
       console.log(user)
       return done(null, user);

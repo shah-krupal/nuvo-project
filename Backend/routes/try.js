@@ -7,11 +7,12 @@ function signupWithGoogle() {
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
-        console.log(response)
+        console.log('hi')
         return response.json();
     })
     .then(data => {
-        if (data.token) {
+        // console.log(data);
+        if (data.set-cookie) {
             document.getElementById('tokenValue').textContent = data.token;
         } else {
             console.error('Token not found in the response.');
