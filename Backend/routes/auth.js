@@ -192,6 +192,8 @@ import { Strategy as googleStrategy } from "passport-google-oauth20";
 import User from "../models/user.js";
 import jwt from 'jsonwebtoken';
 import passport from '../config/passport-auth.js'
+import { serialize } from "cookie";
+import Cookies from 'js-cookie';
 
 const router = express.Router();
 
@@ -231,6 +233,7 @@ router.get('/google/callback',
 		function(req,res){
 			const token = generateJWTToken(req.user);
 			console.log(token)
+
 		
 			// return res
 			// 	.status(200)
@@ -243,9 +246,14 @@ router.get('/google/callback',
 			// 		success: "SendData",
 			// 		token: token,
 			// 	});
-			res.cookie("access_token", token)
-			res.setHeader('access_token', token)
+			const tmp = serialize('access_token', token, { domain: '.vercel.app', path: '/', sameSite: 'None', httpOnly: false });
+			res.cookie("access_token", tmp, { domain: '.vercel.app', path: '/', sameSite: 'None', httpOnly: false });
+			res.setHeader('access_token', token);
+			Cookies.set('access_token', token, { domain: '.vercel.app', path: '/', sameSite: 'None', httpOnly: false })
 			res.redirect('http://localhost:3000/success')
+			
+			// res.redirect('https://producthunt-frontend.vercel.app/success');
+
 			
 			
 		}
