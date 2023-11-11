@@ -256,6 +256,7 @@ router.get(
 		res.cookie("access_token", token, {
 			sameSite: "Lax",
 			httpOnly: true,
+			domain:process.env.NODE_ENV === "production" ? ".vercel.app" : "localhost",
 		})
 		// // res.setHeader("access_token", token);S
 		// Cookies.set("access_token", token, {
