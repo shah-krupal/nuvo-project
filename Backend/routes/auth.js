@@ -225,52 +225,61 @@ router.get("/login/failed", (req, res) => {
 // 		}
 // );
 
-router.get(
-	"/google/callback",
-	passport.authenticate("google", {
-		session: false,
-	}),
-	function (req, res) {
-		const token = generateJWTToken(req.user);
-		console.log(token);
-
-		// const obj = res
-		// 	.status(200)
-		// 	.cookie("access_token", token, {
-		// 		httpOnly: true,
-		// 		secure: process.env.NODE_ENV === "production",
-		// 	})
-		// 	.json({
-		// 		status: true,
-		// 		success: "SendData",
-		// 		token: token,
-		// 	});
-		console.log('helo');
-		// res.cookie("access_token", token)
-		
-		// const tmp = serialize("access_token", token, {
-		// 	domain: ".vercel.app",
-		// 	sameSite: "None",
-		// 	httpOnly: true,
-		// });
-		res.cookie("access_token", token, {
-			sameSite: "Lax",
-			httpOnly: true,
-			domain:process.env.NODE_ENV === "production" ? ".vercel.app" : "localhost",
-		})
-		// // res.setHeader("access_token", token);S
-		// Cookies.set("access_token", token, {
-		// 	domain: ".vercel.app",
-		// 	path: "/",
-		// 	sameSite: "None",
-		// 	httpOnly: false,
-		// });
-		res.setHeader('access_token', token)
-		// res.redirect('http://localhost:3000/success')
-		// res.redirect('/auth/login/successful')
-		res.redirect("https://producthunt-frontend.vercel.app/success");
-	}
+router.get("/google/callback",
+  passport.authenticate("google", {
+    session: false,
+    failureRedirect: "/login/failed",
+  }),
+  (req,res)=>{
+	res.cookie('access_token',"hello",{sameSite:'none',secure:true,httpOnly:true})
+	console.log('here')
+	console.log(req.user)
+	res.redirect('https://producthunt-frontend.vercel.app/success')
+  }
 );
+
+
+// 	function (req, res) {
+// 		const token = generateJWTToken(req.user);
+// 		console.log(token);
+
+// 		// const obj = res
+// 		// 	.status(200)
+// 		// 	.cookie("access_token", token, {
+// 		// 		httpOnly: true,
+// 		// 		secure: process.env.NODE_ENV === "production",
+// 		// 	})
+// 		// 	.json({
+// 		// 		status: true,
+// 		// 		success: "SendData",
+// 		// 		token: token,
+// 		// 	});
+// 		console.log('helo');
+// 		// res.cookie("access_token", token)
+		
+// 		// const tmp = serialize("access_token", token, {
+// 		// 	domain: ".vercel.app",
+// 		// 	sameSite: "None",
+// 		// 	httpOnly: true,
+// 		// });
+// 		res.cookie("access_token", token, {
+// 			sameSite: "Lax",
+// 			httpOnly: true,
+// 			domain:process.env.NODE_ENV === "production" ? ".vercel.app" : "localhost",
+// 		})
+// 		// // res.setHeader("access_token", token);S
+// 		// Cookies.set("access_token", token, {
+// 		// 	domain: ".vercel.app",
+// 		// 	path: "/",
+// 		// 	sameSite: "None",
+// 		// 	httpOnly: false,
+// 		// });
+// 		res.setHeader('access_token', token)
+// 		// res.redirect('http://localhost:3000/success')
+// 		// res.redirect('/auth/login/successful')
+// 		res.redirect("https://producthunt-frontend.vercel.app/success");
+// 	}
+// );
 
 router.post("/signup/local", async (req, res) => {
 	// signup for non-admin users
