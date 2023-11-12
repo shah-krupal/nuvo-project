@@ -12,6 +12,7 @@ import productRouter from "./routes/product.js"
 import paidpopularRouter from "./routes/paidpopular.js"
 import staticdataRouter from "./routes/staticdata.js"
 import reviewRouter from "./routes/review.js"
+import cors from "cors";
 
 dotenv.config();
 
