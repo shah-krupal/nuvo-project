@@ -33,6 +33,9 @@ app.use((req, res, next) => {
     next();
 });
 
+app.use(cors({ credentials: true, origin: 'https://producthunt-frontend.vercel.app' }));
+
+
 app.use(express.urlencoded({extended:true}));
 app.use(express.json()) ;
 app.use(cookieParser());
