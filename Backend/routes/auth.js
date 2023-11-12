@@ -231,7 +231,7 @@ router.get("/google/callback",
     failureRedirect: "/login/failed",
   }),
   (req,res)=>{
-	res.setCookie('access_token',"hello",{sameSite:'none',secure:true,httpOnly:true})
+	res.setHeader('access_token',"Hi ji")
 	res.status(200)
 	res.cookie('access_token',"hello",{sameSite:'none',secure:true,httpOnly:true})
 	console.log('here')
