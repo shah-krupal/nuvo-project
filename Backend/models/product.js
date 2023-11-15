@@ -77,7 +77,12 @@ const Product = sequelize.define('product', {
         allowNull: false,
         defaultValue: 0
     },
+    featured:{
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false
+    }
 })
-await Product.sync()
+await Product.sync({alter:true})
 
 export default Product 

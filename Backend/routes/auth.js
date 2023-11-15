@@ -227,10 +227,11 @@ router.get("/login/failed", (req, res) => {
 
 router.get("/google/callback",
   passport.authenticate("google", {
-    session: false,
+    // session: false,
     failureRedirect: "/login/failed",
   }),
   (req,res)=>{
+	console.log('req' + req)
 	res.setHeader('access_token',"Hi ji")
 	res.status(200)
 	res.cookie('access_token',"hello",{sameSite:'none',secure:true,httpOnly:true})

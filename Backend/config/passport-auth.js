@@ -3,6 +3,7 @@ import { Strategy as localStrategy } from "passport-local";
 import { Strategy as googleStrategy } from "passport-google-oauth20";
 import User from "../models/user.js";
 import bcrypt from 'bcrypt';
+import jwt from "jsonwebtoken";
 
 passport.use(new localStrategy({usernameField: 'email'}, async (email, password, done) => { 
   console.log('local')
@@ -22,8 +23,8 @@ passport.use(new localStrategy({usernameField: 'email'}, async (email, password,
 passport.use(new googleStrategy({
     clientID: '752847050713-jkg2478vae1245abgmc34m963s2uvg6l.apps.googleusercontent.com',  //process.env.GOOGLE_CLIENT_ID,
     clientSecret: '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',   //process.env.GOOGLE_CLIENT_SECRET,
-    // callbackURL: "http://localhost:3000/auth/google/callback",
-    callbackURL:"https://nuvo-project.vercel.app/auth/google/callback",
+    callbackURL: "http://localhost:3000/auth/google/callback",
+    // callbackURL:"https://nuvo-project.vercel.app/auth/google/callback",
     scope: ['profile', 'email'],
   }, async function (accessToken, refreshToken, profile, done) {
     try {
@@ -42,7 +43,8 @@ passport.use(new googleStrategy({
         console.log('newuser' + newuser)
       }
       console.log(user)
-      return done(null, user);
+      const token = generateJWTToken(user);
+      return done(null, user,token);
     } catch (err) {
       console.log(err)
       return done(err);
@@ -98,6 +100,18 @@ passport.deserializeUser((email, done) => {
 //   )
 // );
 
+const generateJWTToken = (user) => {
+	let tokenData = {
+		email: user.email,
+		role: process.env.USER, // google signup only for users Not Admin
+	};
+	console.log(tokenData);
+	const token = jwt.sign(tokenData, process.env.JWT_SECRET, {
+		expiresIn: process.env.JWT_EXPIRES_IN,
+	});
+	console.log(token);
+	return token;
+};
 
   
 

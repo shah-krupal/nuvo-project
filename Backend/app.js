@@ -40,6 +40,11 @@ app.use(cors({ credentials: true, origin: 'https://producthunt-frontend.vercel.a
 app.use(express.urlencoded({extended:true}));
 app.use(express.json()) ;
 app.use(cookieParser());
+app.use(session({
+    resave: false,
+    saveUninitialized: true,
+    secret: process.env.JWT_SECRET,
+}))
 
 // app.use(
 //     session({

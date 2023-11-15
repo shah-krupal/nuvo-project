@@ -3,7 +3,7 @@ const router = express.Router()
 import Product from '../models/product.js'
 import sequelize from '../config/database.js';
 import {Op, Sequelize} from 'sequelize'
-import { isLoggedin } from '../middleware.js';
+import { isAdmin, isLoggedin } from '../middleware.js';
 import Person from '../models/person.js'
 
 router.post('/addproduct', isLoggedin, async (req, res) => {  // add new product
@@ -240,6 +240,45 @@ router.get('/:productid/overview', async (req, res) => {  // get overview of a p
         return res
         .status(200)
         .json(overview)
+    }
+    catch(err){
+        return res
+        .status(400)
+        .json({message: err.message})
+    }
+});
+
+router.get('/featuredproducts', async (req, res) => {  // get featured products
+    try{
+        const products = await Product.findAll({
+            where: {
+                featured: true
+            }
+        })
+        return res
+        .status(200)
+        .json(products)
+    }
+    catch(err){
+        return res
+        .status(400)
+        .json({message: err.message})
+    }
+});
+
+router.post('/changefeatured', isAdmin, async (req, res) => {  // change featured status of a product 1 for featured 0 for not featured
+    try{
+        const option = req.body.featured ;
+        const id = req.body.productId ;
+        const product = await Product.findByPk(id)
+        if(option)
+            product.featured = true ;
+        else
+            product.featured = false ;
+        await product.save()
+        return res
+        .status(200)
+        .json(product)
     }
     catch(err){
         return res
