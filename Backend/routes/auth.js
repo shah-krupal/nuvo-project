@@ -371,7 +371,7 @@ router.post("/login/local", (req, res, next) => {
 			return res.status(400).json({ message: "Invalid credentials" });
 		}
 		console.log("here");
-		const token = generateJWTToken(user);
+		const token = generateJWTToken(user,'USER');
 		console.log(token);
 		return res
 			.status(200)
@@ -393,10 +393,35 @@ router.post("/login/local", (req, res, next) => {
 	})(req, res, next); // <-- Wrap passport.authenticate with (req, res, next)
 });
 
-const generateJWTToken = (user) => {
+router.post('/adminlogin', async (req, res) => {
+	passport.authenticate('local', (err, user) => {
+		if (err) {
+			return next(err);
+		}
+		if (!user) {
+			return res.status(400).json({ message: 'Invalid credentials' });
+		}
+		console.log('here');
+		const token = generateJWTToken(user,'ADMIN');
+		console.log(token);
+		return res
+			.status(200)
+			.cookie("access_token", token, {
+				httpOnly: true,
+				secure: process.env.NODE_ENV === "production",
+			})
+			.json({
+				status: true,
+				success: "SendData",
+				token: token,
+			});
+	})(req, res, next); // <-- Wrap passport.authenticate with (req, res, next)
+});
+
+const generateJWTToken = (user, role) => {
 	let tokenData = {
 		email: user.email,
-		role: process.env.USER, // google signup only for users Not Admin
+		role: process.env.role, // google signup only for users Not Admin
 	};
 	console.log(tokenData);
 	const token = jwt.sign(tokenData, process.env.JWT_SECRET, {
