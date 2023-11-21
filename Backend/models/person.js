@@ -47,6 +47,6 @@ const Person = sequelize.define('person', {
     }
 });
 
-await Person.sync();
+await Person.sync({alter:true});
 
 export default Person;

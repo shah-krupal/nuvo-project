@@ -327,19 +327,21 @@ router.post("/signup/local", async (req, res) => {
 router.post("/signupadmin/local", async (req, res) => {
 	// signup for admin
 	const { email, password } = req.body;
+	console.log(email, password);
 	try {
-		user = await User.create({
+		const user = await User.create({
 			email: email,
 			password: password,
 			role: process.env.ADMIN,
 		});
 	} catch (err) {
-		throw new Error("Error creating user");
+		console.log(err.message)
+		throw new Error("Error creating user" + err.message);
 	}
 
 	let tokenData = {
-		email: user.email,
-		role: user.role,
+		email: email,
+		role: process.env.ADMIN,
 	};
 
 	const token = await jwt.sign(tokenData, process.env.JWT_SECRET, {
