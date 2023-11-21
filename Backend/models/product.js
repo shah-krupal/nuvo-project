@@ -79,7 +79,6 @@ const Product = sequelize.define('product', {
     },
     featured:{
         type: DataTypes.BOOLEAN,
-        allowNull: false,
         defaultValue: false
     }
 })
