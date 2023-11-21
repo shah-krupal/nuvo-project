@@ -6,7 +6,8 @@ export const isLoggedin = async (req, res, next) => {
 	if (!req.headers.authorization) {
 		return res.status(401).send('Unauthorized: Missing authorization header' );
 	  }
-	const token = req.headers.authorization.split(' ')[2];
+	const token = req.headers.authorization.split(' ')[1];
+	console.log(token)
   	if (!token) {
     	// No 'access_token' cookie found, throw an error
     	return res.status(401).send('No token, authorization denied');
@@ -34,7 +35,7 @@ export const isAdmin = async (req, res, next) => {
 		return res.status(401).send('Unauthorized: Missing authorization header' );
 	}
 	console.log(2)
-	const token = req.headers.authorization.split(' ')[2];
+	const token = req.headers.authorization.split(' ')[1];
 	console.log(token)
   	if (!token) {
     	// No 'access_token' cookie found, throw an error
