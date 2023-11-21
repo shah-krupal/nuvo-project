@@ -22,7 +22,7 @@ const Person = sequelize.define('person', {
         unique: true
     },
     profileUrl:{
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
         allowNull: true
     },
     role:{
