@@ -313,12 +313,6 @@ router.post("/signup/local", async (req, res) => {
 				success: "SendData",
 				token: token,
 			});
-		// res.cookie("access_token", token, {
-		// 	httpOnly: true,
-		// 	secure: process.env.NODE_ENV === "production",
-		// })
-		// // res.redirect('https://producthunt-frontend.vercel.app/success')
-		// res.redirect('http://localhost:3000/success')
 	} catch (err) {
 		return res.status(400).json({ message: err.message + err.stack });
 	}
@@ -327,38 +321,35 @@ router.post("/signup/local", async (req, res) => {
 router.post("/signupadmin/local", async (req, res) => {
 	// signup for admin
 	const { email, password } = req.body;
-	console.log(email, password);
 	try {
 		const user = await User.create({
 			email: email,
 			password: password,
-			role: process.env.ADMIN,
+			role: process.env.ADMIN || "admin",
 		});
+		let tokenData = {
+			email: user.email,
+			role: user.role,
+		};
+		console.log(tokenData);
+		const token = await jwt.sign(tokenData, process.env.JWT_SECRET, {
+			expiresIn: process.env.JWT_EXPIRES_IN,
+		});
+
+		return res
+			.status(200)
+			.cookie("access_token", token, {
+				httpOnly: true,
+				secure: process.env.NODE_ENV === "production",
+			})
+			.json({
+				status: true,
+				success: "SendData",
+				token: token,
+			});
 	} catch (err) {
-		console.log(err.message)
-		throw new Error("Error creating user" + err.message);
+		return res.status(400).json({ message: err.message + err.stack });
 	}
-
-	let tokenData = {
-		email: email,
-		role: process.env.ADMIN,
-	};
-
-	const token = await jwt.sign(tokenData, process.env.JWT_SECRET, {
-		expiresIn: process.env.JWT_EXPIRES_IN,
-	});
-
-	return res
-		.status(200)
-		.cookie("access_token", token, {
-			httpOnly: true,
-			secure: process.env.NODE_ENV === "production",
-		})
-		.json({
-			status: true,
-			success: "SendData",
-			token: token,
-		});
 });
 
 router.post("/login/local", (req, res, next) => {
@@ -393,7 +384,7 @@ router.post("/login/local", (req, res, next) => {
 	})(req, res, next); // <-- Wrap passport.authenticate with (req, res, next)
 });
 
-router.post('/adminlogin', async (req, res) => {
+router.post('/adminlogin', async (req, res,next) => {
 	passport.authenticate('local', (err, user) => {
 		if (err) {
 			return next(err);
@@ -418,10 +409,12 @@ router.post('/adminlogin', async (req, res) => {
 	})(req, res, next); // <-- Wrap passport.authenticate with (req, res, next)
 });
 
-const generateJWTToken = (user, role) => {
+function generateJWTToken (user, role){
+	const data = role ;
+	console.log(data)
 	let tokenData = {
 		email: user.email,
-		role: process.env.role, // google signup only for users Not Admin
+		role: (role == "ADMIN" || role == "admin") ? process.env.ADMIN : process.env.USER, // google signup only for users Not Admin
 	};
 	console.log(tokenData);
 	const token = jwt.sign(tokenData, process.env.JWT_SECRET, {
