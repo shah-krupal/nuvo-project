@@ -417,11 +417,17 @@ function generateJWTToken (user, role){
 		role: (role == "ADMIN" || role == "admin") ? process.env.ADMIN : process.env.USER, // google signup only for users Not Admin
 	};
 	console.log(tokenData);
-	const token = jwt.sign(tokenData, process.env.JWT_SECRET, {
-		expiresIn: process.env.JWT_EXPIRES_IN,
-	});
-	console.log(token);
-	return token;
+	try {
+		const token = jwt.sign(tokenData, process.env.JWT_SECRET, {
+			expiresIn: process.env.JWT_EXPIRES_IN,
+			algorithm: 'HS256',
+		});
+		console.log(token);
+		return token;
+	} catch (error) {
+		console.error('Error generating JWT token:', error.message);
+		throw error; // Re-throw the error for higher-level handling
+	}
 };
 
 export default router;
