@@ -120,5 +120,30 @@ router.patch("/updatecategory", isAdmin, async (req, res) => {  // update catego
     }
 });
 
+router.post('/deletecategory', isAdmin, async (req, res) => {  // delete category
+    try{
+        const id = req.body.categoryId;
+        const result = await Category.destroy({
+            where: {
+                categoryId:id
+            }
+        })
+        if(result == 0)
+        {
+            return res
+            .status(400)
+            .json({message: "Category not found"})
+        }
+        return res
+        .status(200)
+        .json({message: `Category ${result.categoryName} deleted`})
+    }
+    catch(err){
+        return res
+        .status(400)
+        .json({message: err.message})
+    }
+});
+
 
 export default router

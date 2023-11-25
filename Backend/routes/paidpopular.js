@@ -59,4 +59,42 @@ router.post('/createpaidpopular', isAdmin, async (req, res) => {
       }
 });
 
+router.post('/updatepaidpopular', isAdmin, async (req, res) => {
+    const transaction = await sequelize.transaction();
+    try{
+        const paidpopular = await Paidpopular.findByPk(req.body.id,{transaction})
+        if(!paidpopular){
+            throw new Error('Paidpopular does not exist');
+        }
+        const updatedPaidpopular = await Paidpopular.update(req.body,{where:{id:req.body.id},transaction})
+        await transaction.commit();
+        return res
+        .status(200)
+        .json(updatedPaidpopular)
+    }
+    catch (err) {
+        await transaction.rollback();
+        return res
+        .status(500)
+        .json({ message: err.message });
+      }
+});
+
+router.post('/deletepaidpopular', isAdmin, async (req, res) => {
+    try{
+        const id = req.body.id;
+        const deletedPaidpopular = await Paidpopular.destroy({where:{id}})
+        if(deletedPaidpopular === 0){
+            throw new Error('Paidpopular could not be deleted');
+        }
+        return res
+        .status(200)
+        .json(deletedPaidpopular)
+    }catch(err){
+        return res
+        .status(500)
+        .json({ message: err.message });
+    }
+});
+
 export default router;
