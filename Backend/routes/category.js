@@ -82,7 +82,7 @@ router.post('/updatepreferredcategory', isAdmin,async (req, res) => {  // update
 
 
 // put in any number of fields you want to update in category
-router.patch("/updatecategory", isAdmin, async (req, res) => {  // update category
+router.post("/updatecategory", isAdmin, async (req, res) => {  // update category
     try{
         const id = req.body.categoryId;
         if(!id)
