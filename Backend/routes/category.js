@@ -54,7 +54,7 @@ router.get('/getpreferredcategory', async (req, res) => {  // get all preferred 
 //     "categoryId": 1,
 //     "isPreferred": TRUE
 // }
-router.patch('/updatepreferredcategory', isAdmin,async (req, res) => {  // update category preferred status
+router.post('/updatepreferredcategory', isAdmin,async (req, res) => {  // update category preferred status
     try{
         const id = req.body.categoryId;
         const isPreferred = req.body.preferred ;
