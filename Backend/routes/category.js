@@ -85,6 +85,10 @@ router.patch('/updatepreferredcategory', isAdmin,async (req, res) => {  // updat
 router.patch("/updatecategory", isAdmin, async (req, res) => {  // update category
     try{
         const id = req.body.categoryId;
+        if(!id)
+        {
+            throw error("Category id not provided")
+        }
         const oldObject = await Category.findOne({
             where: {
                 categoryId:id

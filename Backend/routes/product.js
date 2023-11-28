@@ -87,18 +87,19 @@ router.get('/getproducts/:pageno', async (req, res) => {  // paginated products
 
 router.get('/searchproduct', async (req, res) => {  // search products by name Search criteria is kept liberal
     const { query } = req.query;
+    console.log(query)
     try{
         const products = await Product.findAll({
             where: {
                 [Op.or]: [
                     {
                         name: {
-                            [Op.ilike]: `%${query}%`
+                            [Op.iLike]: `%${query}%`
                         },
                     },
                     {
                         shortDescription: {
-                            [Op.ilike]: `%${query}%`
+                            [Op.iLike]: `%${query}%`
                         }
                     }
                 ]
