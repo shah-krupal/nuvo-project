@@ -2,7 +2,7 @@ import express from 'express'
 const router = express.Router()
 import Person from '../models/person.js'
 import sequelize from '../config/database.js';
-import { isLoggedin } from '../middleware.js';
+import { isAdmin, isLoggedin } from '../middleware.js';
 
 router.get('/allperson', async (req, res) => {
         try{
@@ -74,6 +74,23 @@ router.delete('/deleteperson/:id', isLoggedin, async (req, res) => {
     }
 });
 
+router.post('/updateperson', isAdmin, async (req, res) => {
+    try{
+        const person = await Person.findByPk(req.body.personId)
+        if(!person){
+            throw new Error('Person does not exist');
+        }
+        const updatedPerson = await Person.update(req.body,{where:{personId:req.body.personId}})
+        return res
+        .status(200)
+        .json(updatedPerson)
+    }
+    catch(err){
+        return res
+        .status(400)
+        .json({message: err.message})
+    }
+});
 
 
 
