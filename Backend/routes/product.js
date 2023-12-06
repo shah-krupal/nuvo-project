@@ -288,6 +288,24 @@ router.post('/changefeatured', isAdmin, async (req, res) => {  // change feature
     }
 });
 
+router.post('/updateproduct', isAdmin, async (req, res) => {  // update product
+    try{
+        const product = await Product.findByPk(req.body.productId)
+        if(!product){
+            throw new Error('Product does not exist');
+        }
+        const updatedProduct = await Product.update(req.body,{where:{productId:req.body.productId}})
+        return res
+        .status(200)
+        .json(updatedProduct)
+    }
+    catch(err){
+        return res
+        .status(400)
+        .json({message: err.message})
+    }
+});
+
 
 
 export default router;
