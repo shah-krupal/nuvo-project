@@ -21,7 +21,8 @@ const port = process.env.PORT || 3000;
 
 
 app.use((req, res, next) => {
-    res.setHeader("Access-Control-Allow-Origin", process.env.FRONTEND_URL);
+    console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!++++++++++++++++++++++++++' + process.env.FRONTEND_URL + '!!!!!!!')
+    res.setHeader("Access-Control-Allow-Origin", 'https://producthunt-frontend.vercel.app');
     res.setHeader(
         "Access-Control-Allow-Methods",
         "GET, POST, PUT, DELETE, PATCH"
@@ -34,7 +35,7 @@ app.use((req, res, next) => {
     next();
 });
 
-app.use(cors({ credentials: true, origin: [process.env.FRONTEND_URL, 'http://localhost:3000'] }));
+app.use(cors({ credentials: true, origin: ['https://producthunt-frontend.vercel.app', 'http://localhost:3000'] }));
 
 
 
