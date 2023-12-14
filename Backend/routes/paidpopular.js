@@ -80,9 +80,9 @@ router.post('/updatepaidpopular', isAdmin, async (req, res) => {
       }
 });
 
-router.post('/deletepaidpopular', isAdmin, async (req, res) => {
+router.delete('/deletepaidpopular/:id', isAdmin, async (req, res) => {
     try{
-        const id = req.body.id;
+        const id = req.params.id;
         const deletedPaidpopular = await Paidpopular.destroy({where:{id}})
         if(deletedPaidpopular === 0){
             throw new Error('Paidpopular could not be deleted');

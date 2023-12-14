@@ -306,6 +306,20 @@ router.post('/updateproduct', isAdmin, async (req, res) => {  // update product
     }
 });
 
+router.delete('/deleteproduct/:productId', isLoggedin, async (req, res) => {
+    try{
+        const product = await Product.findByPk(req.params.productId)
+        await product.destroy()
+        return res
+        .status(200)
+        .json(person)
+    }
+    catch(err){
+        return res
+        .status(400)
+        .json({message: err.message})
+    }
+});
 
 
 export default router;

@@ -124,9 +124,9 @@ router.post("/updatecategory", isAdmin, async (req, res) => {  // update categor
     }
 });
 
-router.post('/deletecategory', isAdmin, async (req, res) => {  // delete category
+router.delete('/deletecategory/:categoryId', isAdmin, async (req, res) => {  // delete category
     try{
-        const id = req.body.categoryId;
+        const id = req.params.categoryId;
         const result = await Category.destroy({
             where: {
                 categoryId:id
