@@ -23,7 +23,7 @@ const dbConfig = config[env];
 // });
 
 
-const sequelize = new Sequelize('psql "postgres://default:hCTRAv7MYiL6@ep-square-tree-45161007.ap-southeast-1.postgres.vercel-storage.com:5432/verceldb"',{
+const sequelize = new Sequelize('postgres://default:hCTRAv7MYiL6@ep-square-tree-45161007.ap-southeast-1.postgres.vercel-storage.com:5432/verceldb',{
   dialect: 'postgres',
   dialectModule: pg,
   dialectOptions: {
